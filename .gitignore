@@ -1,0 +1,79 @@
+# Claude PM - Git Ignore
+
+# OS Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# User-specific files (for your own local experiments)
+playground/
+scratch/
+notes.md
+.local/
+
+# Keep these directories in git but ignore their contents (except templates)
+# Actual discovery cycles, requirements, and story maps are project-specific
+product/discovery/*
+!product/discovery/interview-template.md
+!product/discovery/synthesis-template.md
+!product/discovery/README.md
+
+# Keep example cycle if you create one
+!product/discovery/example-*/
+
+# Keep templates and documentation, ignore actual requirements
+product/requirements/*
+!product/requirements/story-template.md
+!product/requirements/epic-template.md
+!product/requirements/stories-by-cycle.md
+!product/requirements/README.md
+
+# Keep story map documentation, ignore actual story maps
+product/story-maps/*
+!product/story-maps/*.md
+!product/story-maps/README.md
+
+# Keep prompts directory
+!product/prompts/
+
+# Keep context directory (these should be filled in per project)
+!product/context/
+
+# Node modules if this becomes a Node project
+node_modules/
+
+# Build outputs
+dist/
+build/
+out/
+
+# IDE
+.claude-history/
