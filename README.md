@@ -29,7 +29,7 @@ Claude PM is a complete workflow for product managers using Claude Code and Miro
 ```bash
 # Clone this repository
 cd ~/dev
-git clone https://github.com/YOUR-ORG/claudepm.git
+git clone https://github.com/trigrman/claudepm.git
 cd claudepm
 
 # Start Claude Code
@@ -370,27 +370,11 @@ See the `examples/` directory for:
 
 ---
 
-## Contributing
-
-We welcome contributions! Areas for improvement:
-- Additional MCP integrations (Linear, Azure DevOps, etc.)
-- Enhanced Miro capabilities (move/delete items)
-- Additional workflow templates
-- Example discovery cycles
-
----
-
-## License
-
-MIT License - See LICENSE file
-
----
-
 ## Support
 
 - **Documentation**: See `product/README.md` for detailed workflow guide
-- **Issues**: https://github.com/YOUR-ORG/claudepm/issues
-- **Discussions**: https://github.com/YOUR-ORG/claudepm/discussions
+- **Issues**: https://github.com/trigrman/claudepm/issues
+- **Discussions**: https://github.com/trigrman/claudepm/discussions
 
 ---
 
