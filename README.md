@@ -26,28 +26,14 @@ Claude PM is a complete workflow for product managers using Claude Code and Miro
 
 ### Installation
 
-```bash
-# Clone this repository
-cd ~/dev
-git clone https://github.com/trigrman/claudepm.git
-cd claudepm
-
-# Start Claude Code
-claude-code
-```
-
-### First-Time Setup
-
-When you first start Claude Code in this directory, tell Claude:
-
-```
-Please read the SETUP.md file and help me set up Claude PM for my project.
-```
+1. Clone this repository to `~/dev/claudepm`
+2. Open the directory in Claude Code
+3. Tell Claude: "Please read the SETUP.md file and help me set up Claude PM for my project."
 
 Claude will guide you through:
 1. Filling in product context files
-2. Installing slash commands
-3. Configuring your first discovery cycle
+2. Understanding the workflow
+3. Starting your first discovery cycle
 
 ---
 
@@ -390,9 +376,4 @@ Built with:
 
 **Ready to transform your product discovery?**
 
-```bash
-cd ~/dev/claudepm
-claude-code
-```
-
-Then tell Claude: "Help me set up my first discovery cycle"
+Open the `claudepm` directory in Claude Code and tell Claude: "Help me set up my first discovery cycle"
