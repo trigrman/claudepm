@@ -28,12 +28,14 @@ Claude PM is a complete workflow for product managers using Claude Code and Miro
 
 1. Clone this repository to `~/dev/claudepm`
 2. Open the directory in Claude Code
-3. Tell Claude: "Please read the SETUP.md file and help me set up Claude PM for my project."
+3. Run `/setup` to populate product context through an interactive interview
+   - Or manually edit files in `product/context/` if you prefer
+   - Or skip setup and start with `/cycle` to dive right in
 
-Claude will guide you through:
-1. Filling in product context files
-2. Understanding the workflow
-3. Starting your first discovery cycle
+The `/setup` command offers three depth levels:
+- **Quick Start** (5-10 min): Product overview only
+- **Standard** (15-20 min): Product overview + target users
+- **Complete** (30-40 min): All context including competitive landscape and tech stack
 
 ---
 
@@ -96,7 +98,26 @@ claudepm/
 
 ---
 
-## The 4-Command Workflow
+## The Workflow
+
+### 0. `/setup` - Initial Product Context (Optional)
+
+```
+/setup
+```
+
+**What it does**:
+- Interactive interview to populate product context
+- Three depth levels: Quick Start, Standard, Complete
+- Creates files in `product/context/`
+
+**Output**: `product/context/*.md` files with your product information
+
+**Time**: 5-40 minutes (depending on depth level chosen)
+
+**When to use**: First-time setup, or when starting a new product/module
+
+---
 
 ### 1. `/cycle` - Start Discovery Cycle
 
