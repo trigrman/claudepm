@@ -45,6 +45,7 @@ product/discovery/*
 !product/discovery/interview-template.md
 !product/discovery/synthesis-template.md
 !product/discovery/README.md
+!product/discovery/meta-synthesis/
 
 # Keep example cycle if you create one
 !product/discovery/example-*/
