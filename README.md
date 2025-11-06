@@ -26,9 +26,14 @@ Claude PM is a complete workflow for product managers using Claude Code and Miro
 
 ### Installation
 
-1. Clone this repository to `~/dev/claudepm`
-2. Open the directory in Claude Code
-3. Run `/setup` to populate product context through an interactive interview
+1. Clone this repository to your project directory
+2. Copy the slash commands to your repository root:
+   ```bash
+   mkdir -p .claude/commands
+   cp claudepm/commands/* .claude/commands/
+   ```
+3. Open your repository in Claude Code
+4. Run `/setup` to populate product context through an interactive interview
    - Or manually edit files in `product/context/` if you prefer
    - Or skip setup and start with `/cycle` to dive right in
 
@@ -45,13 +50,12 @@ The `/setup` command offers three depth levels:
 claudepm/
 ├── README.md                          # This file
 ├── SETUP.md                           # First-time setup guide
-├── .claude/
-│   └── commands/                      # Slash commands
-│       ├── cycle.md                   # Start new discovery cycle
-│       ├── synth.md                   # Synthesize discovery
-│       ├── req.md                     # Extract requirements
-│       ├── map.md                     # Create story map
-│       └── jira.md                    # Load to Jira
+├── commands/                          # Slash commands (copy to .claude/commands/)
+│   ├── setup.md                       # Initial product context interview
+│   ├── cycle.md                       # Start new discovery cycle
+│   ├── synth.md                       # Synthesize discovery
+│   ├── req.md                         # Extract requirements
+│   └── jira.md                        # Load to Jira
 │
 └── product/
     ├── README.md                      # Product workflow guide
@@ -317,7 +321,7 @@ A: Yes! Stories are created as markdown files. You can manually create Jira tick
 A: Yes! Story mapping is optional. You can skip `/map` and go straight from `/req` to `/jira`.
 
 **Q: How do I customize the workflow?**
-A: Edit files in `product/prompts/` to change AI behavior, or edit slash commands in `.claude/commands/`.
+A: Edit files in `product/prompts/` to change AI behavior, or edit slash commands in `commands/` (then copy to `.claude/commands/`).
 
 **Q: Can I use this for non-software products?**
 A: Yes! Adjust templates and context files for your domain.
@@ -343,10 +347,11 @@ Modify AI behavior:
 - `product/prompts/create-story-map.md`
 
 ### Slash Commands
-Add your own commands in `.claude/commands/`:
+Modify commands in `commands/` (then copy to `.claude/commands/`):
 - Create new workflows
 - Add custom validations
 - Integrate with other tools
+- Keep `commands/` as your source of truth
 
 ---
 
@@ -364,7 +369,7 @@ See the `examples/` directory for:
 ## Troubleshooting
 
 ### Slash commands not working
-**Solution**: Commands are in `.claude/commands/`. Check they're installed correctly.
+**Solution**: Make sure you copied the commands from `claudepm/commands/` to `.claude/commands/` at your repository root.
 
 ### AI synthesis is too generic
 **Solution**: Fill in `product/context/` files with more specific product details.
