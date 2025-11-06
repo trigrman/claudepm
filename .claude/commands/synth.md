@@ -4,64 +4,75 @@ description: Run synthesis on the current discovery cycle
 
 You are being asked to synthesize the discovery materials for the current or specified product discovery cycle.
 
-# Task
+# Overview
 
-1. **Record start time**:
-   - Capture the current timestamp as the operation start time
-   - This will be used for timing metrics
+This command orchestrates the synthesis workflow by reading the canonical prompt instructions and executing them.
 
-2. **Identify the cycle**:
-   - Check if the user specified a cycle name (e.g., "2025-10-30-dark-mode")
-   - If not specified, look in `product/discovery/` for the most recent cycle (by date prefix)
-   - Ask the user to clarify if there are multiple recent cycles
+# Workflow Steps
 
-3. **Locate discovery materials**:
-   - Read `product/discovery/{cycle-name}/README.md` for context
-   - Read all files in `product/discovery/{cycle-name}/interviews/` (excluding template files)
-   - Read all files in `product/discovery/{cycle-name}/observations/` (excluding template files)
+## 1. Record Start Time
+- Capture the current timestamp as the operation start time
+- This will be used for timing metrics
 
-4. **Run synthesis using Task agent**:
-   - Use the Task tool with subagent_type="general-purpose"
-   - Provide the agent with:
-     - All discovery materials content
-     - The synthesis template from `product/templates/synthesis-template.md`
-     - Context files from `product/context/` (product-overview.md, target-users.md, etc.)
-   - Instruct the agent to create a comprehensive synthesis document following the template
+## 2. Identify the Cycle
+- Check if the user specified a cycle name (e.g., "2025-10-30-dark-mode")
+- If not specified, look in `product/discovery/` for the most recent cycle (by date prefix)
+- Ask the user to clarify if there are multiple recent cycles
 
-5. **Save synthesis output**:
-   - Save to `product/discovery/{cycle-name}/synthesis-{date}.md`
-   - Use ISO date format (YYYY-MM-DD) for the filename
-   - Remove the `.synthesis-pending` marker file if it exists
+## 3. Read the Synthesis Prompt
+**Read and follow the instructions in**: `product/prompts/synthesize-discovery.md`
 
-6. **Record timing and report results**:
-   - Capture the end timestamp
-   - Calculate duration in seconds
-   - Read or create timing.json in the cycle directory
-   - Add this operation to the operations array:
-     ```json
-     {
-       "command": "/synth",
-       "start": "{start_timestamp_ISO8601}",
-       "end": "{end_timestamp_ISO8601}",
-       "duration_seconds": {duration},
-       "status": "success"
-     }
-     ```
-   - Update total_duration_seconds
-   - Append to global timing log at `artifacts/timing-log.jsonl`:
-     ```json
-     {"timestamp": "{end_timestamp}", "command": "/synth", "cycle": "{cycle-name}", "duration_seconds": {duration}, "status": "success"}
-     ```
-   - Tell the user:
-     - The synthesis is complete
-     - The file path
-     - Key findings summary (themes, features, effort estimate)
-     - The operation duration
+This prompt contains the canonical instructions for:
+- What context files to review
+- How to identify themes and patterns
+- How to extract user needs
+- How to rank pain points
+- How to propose features
+- How to structure the output
 
-# Notes
+## 4. Execute Synthesis
+Follow the instructions from the prompt to create the synthesis document.
 
-- The synthesis should follow the template structure exactly
-- Include all insights from interviews and observations
-- Identify themes, features, technical recommendations, and open questions
-- Provide effort estimates and risk assessment
-- The Task agent should have autonomy to analyze and synthesize, not just copy content
+**Key requirements:**
+- Use the synthesis template from `product/discovery/synthesis-template.md`
+- Review all discovery materials in the cycle directory
+- Include product context from `product/context/`
+- Cross-reference with previous cycles
+- Provide evidence-based recommendations
+
+## 5. Save Output
+- Save to: `product/discovery/{cycle-name}/synthesis-{date}.md`
+- Use ISO date format (YYYY-MM-DD) for the filename
+- Remove the `.synthesis-pending` marker file if it exists
+
+## 6. Record Timing and Report Results
+- Capture the end timestamp
+- Calculate duration in seconds
+- Read or create `timing.json` in the cycle directory
+- Add this operation to the operations array:
+  ```json
+  {
+    "command": "/synth",
+    "start": "{start_timestamp_ISO8601}",
+    "end": "{end_timestamp_ISO8601}",
+    "duration_seconds": {duration},
+    "status": "success"
+  }
+  ```
+- Update total_duration_seconds
+- Append to global timing log at `artifacts/timing-log.jsonl`:
+  ```json
+  {"timestamp": "{end_timestamp}", "command": "/synth", "cycle": "{cycle-name}", "duration_seconds": {duration}, "status": "success"}
+  ```
+- Tell the user:
+  - The synthesis is complete
+  - The file path
+  - Key findings summary (themes, features, effort estimate)
+  - The operation duration
+
+# Important Notes
+
+- **The prompt file is the source of truth** for synthesis instructions
+- Users can customize synthesis behavior by editing `product/prompts/synthesize-discovery.md`
+- This command handles workflow orchestration (finding files, timing, saving output)
+- The prompt handles the actual synthesis logic and requirements
