@@ -78,3 +78,6 @@ out/
 
 # IDE
 .claude-history/
+
+# Claude configuration (user-specific)
+CLAUDE.md

@@ -1,6 +1,7 @@
 # Discovery Synthesis
-**Date:** [YYYY-MM-DD]  
-**Interviews Analyzed:** [List of interview files]  
+**Date:** [YYYY-MM-DD]
+**Interviews Analyzed:** [List of interview files]
+**Observations Reviewed:** [List of observation files/artifacts analyzed]
 **Participants:** [Number and brief description of who was interviewed]
 
 ## Executive Summary

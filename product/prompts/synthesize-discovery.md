@@ -8,10 +8,17 @@ Please analyze the interview files for a specific discovery cycle and create a s
 ## Context Files to Review
 - All files in `product/context/` (for product background)
 - All files in `product/discovery/[CYCLE-NAME]/interviews/` (except the template file)
-- All files in `product/discovery/[CYCLE-NAME]/observations/`
+- **All files in `product/discovery/[CYCLE-NAME]/observations/`** - Read every file and incorporate into synthesis
 - All files in `product/discovery/[CYCLE-NAME]/surveys/`
 - `product/requirements/stories-by-cycle.md` (to see what's already been discovered)
 - Previous cycle synthesis documents (to understand previous cycles)
+
+### Handling Observations
+Observations may include analytics data, screenshots, competitive analysis, support tickets, or other artifacts:
+1. **Read every file** in the observations directory
+2. **If an observation is unclear**, ask the PM a blocking question immediately to understand it
+3. **If the PM defers answering**, document it in the "Open Questions" section
+4. **Incorporate observations** into themes, pain points, and features alongside interview evidence
 
 ## Instructions
 1. Read all research files in the specified cycle directory
@@ -47,7 +54,9 @@ Use the synthesis template structure found at: `product/discovery/synthesis/synt
 - [ ] Each theme references at least 3 interviews
 - [ ] Pain points are ranked with quantitative support (X of Y participants)
 - [ ] Each proposed feature includes validation evidence
-- [ ] Open questions are listed for any ambiguous findings
+- [ ] **All observation files have been read and incorporated**
+- [ ] **Blocking questions were asked for unclear observations**
+- [ ] Open questions are listed for any ambiguous findings (including deferred observation questions)
 - [ ] Executive summary accurately reflects detailed findings
 - [ ] Cross-references to previous cycles are included where relevant
 - [ ] Synthesis notes which findings are new vs. confirming previous research

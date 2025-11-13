@@ -45,7 +45,20 @@ Follow the instructions from the prompt to create the synthesis document.
 - Use ISO date format (YYYY-MM-DD) for the filename
 - Remove the `.synthesis-pending` marker file if it exists
 
-## 6. Record Timing and Report Results
+## 6. Post-Synthesis PM Interview
+**If the synthesis contains open questions**, conduct a follow-up interview with the PM:
+
+1. **Extract all open questions** from the synthesis document
+2. **Interview the PM** to get answers to as many questions as possible
+3. **Update the synthesis document** with:
+   - Answers integrated into appropriate sections (themes, pain points, features)
+   - Remove questions that were answered from "Open Questions" section
+   - Keep any questions the PM still cannot answer in "Open Questions"
+4. **Document the interview** by noting which questions were answered
+
+**If there are no open questions**, skip this step.
+
+## 7. Record Timing and Report Results
 - Capture the end timestamp
 - Calculate duration in seconds
 - Read or create `timing.json` in the cycle directory
