@@ -90,24 +90,35 @@
 
 [High-level view of planned enhancements or strategic direction. Not a commitment, but useful context.]
 
-## Appendix: Built Stories
+## Appendix: Build History
 
-### [Feature Area 1]
-- **STORY-001**: [Story title] (Built: YYYY-MM-DD)
-- **STORY-005**: [Story title] (Built: YYYY-MM-DD)
-- **STORY-012**: [Story title] (Built: YYYY-MM-DD)
+[Grouped by release. Each release section includes stories built and any capabilities built without stories.]
 
-### [Feature Area 2]
-- **STORY-002**: [Story title] (Built: YYYY-MM-DD)
-- **STORY-008**: [Story title] (Built: YYYY-MM-DD)
-- **STORY-015**: [Story title] (Built: YYYY-MM-DD)
+### Release {NUMBER} - {YYYY-MM-DD}
 
-### [Feature Area 3]
-- **STORY-010**: [Story title] (Built: YYYY-MM-DD)
-- **STORY-020**: [Story title] (Built: YYYY-MM-DD)
+**Stories Built**: {count}
 
-[Continue listing all built stories organized by feature area]
+| ID | Title |
+|----|-------|
+| STORY-001 | [Story title] |
+| STORY-002 | [Story title] |
+
+**Capabilities Built Without Stories**: {count}
+
+| Capability | Commit |
+|------------|--------|
+| [Description] | [hash] |
+
+[Story details (status, build date, acceptance criteria) are in the story files. Full release details are in `product/releases/`.]
 
 ---
 
-*This product specification is a living document that reflects the current state of the product. It is updated through the `/recon` workflow as new capabilities are built and verified.*
+## Version History
+
+| Version | Date | Description |
+|---------|------|-------------|
+| 1.0.0 | YYYY-MM-DD | [Release description] |
+
+---
+
+*This product specification is a living document that reflects the current state of the product. It is updated through the `/rel` workflow as new capabilities are built and verified.*

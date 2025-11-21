@@ -74,7 +74,13 @@ Follow the instructions from the prompts to create the stories.
   - Summary of priorities
   - Total effort estimate
 
-## 9. Record Timing and Report Results
+## 9. Add Stories to Backlog
+- Read `product/backlog.md` (create from template if doesn't exist)
+- Add each new story to the backlog table with: ID, Title, Priority, Iteration
+- The backlog is the master index of all un-built stories
+- Update the "Last Updated" date
+
+## 10. Record Timing and Report Results
 - Capture the end timestamp
 - Calculate duration in seconds
 - Read or create `timing.json` in the iteration directory
@@ -112,6 +118,7 @@ Follow the instructions from the prompts to create the stories.
 - This command handles workflow orchestration (finding files, numbering, timing, saving output)
 - The prompt handles the actual extraction logic and story format
 - Epics have been removed - stories are the atomic units
-- Stories stay in their iteration directory (not moved to backlog until after build)
+- Stories are saved to iteration directory AND added to product backlog
+- Backlog is the master index of all un-built stories (removed when released via `/rel`)
 - DO NOT automatically load stories to Jira - that's a separate workflow (`/jira`)
 - Story numbering is sequential across all iterations, not per-iteration
