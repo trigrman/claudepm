@@ -1,8 +1,8 @@
 ---
-description: Load current cycle stories and epic to Jira with proper parent links
+description: Load current iteration stories to Jira
 ---
 
-You are being asked to load an epic and its user stories from a product discovery cycle into Jira.
+You are being asked to load user stories from a product iteration into Jira.
 
 # Overview
 
@@ -14,42 +14,40 @@ This command orchestrates the Jira loading workflow by reading the canonical pro
 - Capture the current timestamp as the operation start time
 - This will be used for timing metrics
 
-## 2. Identify the Cycle
-- Check if the user specified a cycle name (e.g., "2025-10-30-dark-mode")
-- If not specified, look in `product/requirements/` for the most recent cycle (by date prefix)
-- Ask the user to clarify if there are multiple recent cycles
+## 2. Identify the Iteration
+- Check if the user specified an iteration name (e.g., "2025-11-12-mvp")
+- If not specified, look in `product/iterations/` for the most recent iteration (by date prefix)
+- Ask the user to clarify if there are multiple recent iterations
 
-## 3. Verify Requirements Exist
-- Check that `product/requirements/{cycle-name}/` directory exists
-- Find the epic file (epic-{number}-{slug}.md)
+## 3. Verify Stories Exist
+- Check that `product/iterations/{iteration-name}/stories/` directory exists
 - Find all story files (story-{number}-{slug}.md)
-- If no requirements found, inform the user they need to run `/req` first
+- If no stories found, inform the user they need to run `/req` first
 
 ## 4. Read the Jira Loading Prompt
 **Read and follow the instructions in**: `product/prompts/load-stories-to-tracker.md`
 
 This prompt contains the canonical instructions for:
 - How to get Jira project information
-- How to extract data from epic and story markdown files
+- How to extract data from story markdown files
 - How to map markdown fields to Jira fields
-- How to create issues in the correct order
-- How to link stories to epics
+- How to create issues
 - How to handle errors and retries
 
 ## 5. Execute Jira Loading
-Follow the instructions from the prompt to load the requirements to Jira.
+Follow the instructions from the prompt to load the stories to Jira.
 
 **Key requirements:**
 - Use Atlassian MCP tools for all Jira operations
-- Create epic first, then stories
-- Link all stories to the epic as parent
-- Preserve all acceptance criteria and metadata
+- Create story issues without epic parent (epics have been removed)
+- Preserve all acceptance criteria and metadata in Jira description
 - Handle any Jira-specific field mappings
+- Use labels to group stories from same iteration if needed
 
 ## 6. Record Timing and Report Results
 - Capture the end timestamp
 - Calculate duration in seconds
-- Read or create `timing.json` in the cycle directory
+- Read or create `timing.json` in the iteration directory
 - Add this operation to the operations array:
   ```json
   {
@@ -59,23 +57,21 @@ Follow the instructions from the prompt to load the requirements to Jira.
     "duration_seconds": {duration},
     "status": "success",
     "metadata": {
-      "epic_created": "PROJ-XXX",
-      "stories_created": ["PROJ-YYY", "PROJ-ZZZ"],
+      "stories_created": ["PROJ-XXX", "PROJ-YYY", "PROJ-ZZZ"],
       "jira_project": "PROJ"
     }
   }
   ```
 - Update total_duration_seconds
-- Append to global timing log at `artifacts/timing-log.jsonl`:
+- Append to global timing log at `product/artifacts/timing-log.jsonl`:
   ```json
-  {"timestamp": "{end_timestamp}", "command": "/jira", "cycle": "{cycle-name}", "duration_seconds": {duration}, "status": "success", "metadata": {"epic_created": "PROJ-XXX", "stories_count": {count}}}
+  {"timestamp": "{end_timestamp}", "command": "/jira", "iteration": "{iteration-name}", "duration_seconds": {duration}, "status": "success", "metadata": {"stories_count": {count}, "jira_project": "PROJ"}}
   ```
 - Tell the user:
   - Jira loading is complete
-  - The epic key and link
   - List of all story keys and titles
   - Summary: X stories loaded to Jira project Y
-  - Direct links to view the epic and stories in Jira
+  - Direct links to view the stories in Jira
   - The operation duration
 
 # Important Notes
@@ -86,3 +82,5 @@ Follow the instructions from the prompt to load the requirements to Jira.
 - The prompt handles the actual Jira API interaction logic
 - Requires Atlassian MCP to be configured with appropriate permissions
 - If Atlassian MCP is not available, inform the user and skip gracefully
+- Epics have been removed - stories are loaded as standalone issues
+- Use iteration name as a label to group related stories in Jira if needed

@@ -7,7 +7,7 @@ You are helping a product manager set up Claude PM for their product. Conduct an
 ### 1. Introduction
 
 Say:
-> "I'll help you set up Claude PM by gathering information about your product. This will populate the context files that I'll reference during discovery cycles. We can go as deep or shallow as you'd like - you can always add more detail later.
+> "I'll help you set up Claude PM by gathering information about your product. This will populate the context files that I'll reference during discovery iterations. We can go as deep or shallow as you'd like - you can always add more detail later.
 >
 > **Note**: If your engineering team has already documented technical architecture or tech stack information, you can add those files directly to `product/context/` or reference them if they're elsewhere in the repository. I'll be able to read them automatically."
 
@@ -166,8 +166,8 @@ After completing the interview (regardless of option chosen), say:
 >
 > ### What you can do now:
 >
-> 1. **Start your first discovery cycle**:
->    - Type `/cycle` to begin
+> 1. **Start your first iteration**:
+>    - Type `/iter` to begin
 >    - I'll help you conduct stakeholder interviews or add research
 >
 > 2. **Add more context** (optional):
@@ -180,12 +180,15 @@ After completing the interview (regardless of option chosen), say:
 >    - Read `product/README.md` for workflow overview
 >
 > ### Quick Reference:
-> - `/cycle` - Start discovery cycle (interviews, research)
+> - `/iter` - Start iteration (interviews, research)
 > - `/synth` - Synthesize discovery findings
 > - `/req` - Extract user stories from synthesis
+> - `/map` - Create Miro story map
+> - `/demap` - Sync priorities from Miro back to stories
 > - `/jira` - Load stories to Jira (if Atlassian MCP configured)
+> - `/recon` - Reconcile releases and update product spec
 >
-> **Ready to start your first cycle?** Just type `/cycle` when you're ready!"
+> **Ready to start your first iteration?** Just type `/iter` when you're ready!"
 
 ---
 
@@ -239,7 +242,7 @@ When creating context files:
 [TBD - can be validated during discovery]
 
 ## Out of Scope (for now)
-[TBD - will be defined during discovery cycles]
+[TBD - will be defined during iterations]
 ```
 
 ---
@@ -258,10 +261,10 @@ Throughout the interview:
 ## Handling Edge Cases
 
 **If user says "I don't know" or "TBD"**:
-- Say: "No problem! I'll mark that as TBD. You can add it later or we'll discover it during cycles."
+- Say: "No problem! I'll mark that as TBD. You can add it later or we'll discover it during iterations."
 
 **If user wants to skip everything**:
-- Say: "Totally fine! You can manually edit the context files in `product/context/` whenever you're ready. Want to jump straight to `/cycle` to start discovery?"
+- Say: "Totally fine! You can manually edit the context files in `product/context/` whenever you're ready. Want to jump straight to `/iter` to start discovery?"
 
 **If user has existing documentation**:
 - Say: "Perfect! You can copy those files directly into `product/context/` or just point me to them and I'll reference them. This interview is optional if you already have good docs."

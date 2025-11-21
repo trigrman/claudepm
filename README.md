@@ -9,7 +9,9 @@ Claude PM is a complete workflow for product managers using Claude Code and Miro
 - Synthesize discovery findings with AI
 - Extract user stories with complete acceptance criteria
 - Create visual story maps in Miro
+- Sync priorities from team collaboration
 - Load stories directly to Jira
+- Reconcile releases and update product specifications
 
 **Timeline**: From idea to development-ready backlog in 2-4 hours (vs 1-3 weeks traditional)
 
@@ -19,7 +21,7 @@ Claude PM is a complete workflow for product managers using Claude Code and Miro
 
 ### Prerequisites
 
-1. **Claude Code** installed (https://docs.claude.com/claude-code)
+1. **Claude Code** installed (https://docs.anthropic.com/claude-code)
 2. **Atlassian MCP** configured for Jira access (optional, for Jira integration)
 3. **Miro MCP** configured for story mapping (optional, for visual collaboration)
 4. **Git** for version control
@@ -27,15 +29,19 @@ Claude PM is a complete workflow for product managers using Claude Code and Miro
 ### Installation
 
 1. Clone this repository to your project directory
-2. Copy the slash commands to your repository root:
+2. Copy the product directory to your repository:
+   ```bash
+   cp -r claudepm/product ./product
+   ```
+3. Copy the slash commands to your repository root:
    ```bash
    mkdir -p .claude/commands
-   cp claudepm/commands/* .claude/commands/
+   cp claudepm/.claude/commands/* .claude/commands/
    ```
-3. Open your repository in Claude Code
-4. Run `/setup` to populate product context through an interactive interview
+4. Open your repository in Claude Code
+5. Run `/setup` to populate product context through an interactive interview
    - Or manually edit files in `product/context/` if you prefer
-   - Or skip setup and start with `/cycle` to dive right in
+   - Or skip setup and start with `/iter` to dive right in
 
 The `/setup` command offers three depth levels:
 - **Quick Start** (5-10 min): Product overview only
@@ -50,15 +56,41 @@ The `/setup` command offers three depth levels:
 claudepm/
 ├── README.md                          # This file
 ├── SETUP.md                           # First-time setup guide
-├── commands/                          # Slash commands (copy to .claude/commands/)
+│
+├── .claude/commands/                  # Slash commands
 │   ├── setup.md                       # Initial product context interview
-│   ├── cycle.md                       # Start new discovery cycle
+│   ├── iter.md                        # Start new iteration
 │   ├── synth.md                       # Synthesize discovery
 │   ├── req.md                         # Extract requirements
-│   └── jira.md                        # Load to Jira
+│   ├── map.md                         # Create Miro story map
+│   ├── demap.md                       # Sync Miro priorities back
+│   ├── jira.md                        # Load to Jira
+│   └── recon.md                       # Reconcile releases
 │
 └── product/
     ├── README.md                      # Product workflow guide
+    │
+    ├── iterations/                    # All iteration artifacts
+    │   └── YYYY-MM-name/              # Example: 2025-11-mvp
+    │       ├── discovery/
+    │       │   ├── interviews/
+    │       │   ├── observations/
+    │       │   ├── synthesis/
+    │       │   └── README.md
+    │       ├── stories/
+    │       │   ├── story-001-*.md
+    │       │   └── archive/
+    │       ├── story-maps/
+    │       │   ├── miro-metadata.json
+    │       │   └── story-map.md
+    │       ├── design/
+    │       │   └── screenshots/
+    │       ├── releases/
+    │       │   └── release-001-*.md
+    │       └── timing.json
+    │
+    ├── backlog.md                     # Ready stories not yet built
+    ├── product-spec.md                # Current product capabilities
     │
     ├── context/                       # Product knowledge base
     │   ├── product-overview.md
@@ -67,37 +99,26 @@ claudepm/
     │   ├── competitive-landscape.md
     │   └── glossary.md
     │
-    ├── discovery/                     # Research organized by cycles
+    ├── templates/                     # Reusable templates
+    │   ├── story-template-llm-dev.md
+    │   ├── story-template-human-dev.md
     │   ├── interview-template.md
     │   ├── synthesis-template.md
-    │   ├── YYYY-MM-DD-cycle-name/
-    │   │   ├── README.md
-    │   │   ├── interviews/
-    │   │   ├── observations/
-    │   │   └── synthesis-YYYY-MM-DD.md
-    │   └── meta-synthesis/
+    │   ├── product-spec-template.md
+    │   └── rule-template.md
     │
-    ├── requirements/                  # User stories & epics
-    │   ├── story-template.md
-    │   ├── epic-template.md
-    │   ├── stories-by-cycle.md        # Master index
-    │   └── YYYY-MM-DD-cycle-name/
-    │       ├── epic-###-name.md
-    │       └── story-###-name.md
+    ├── prompts/                       # Reusable AI prompts
+    │   ├── synthesize-discovery.md
+    │   ├── extract-user-stories.md
+    │   ├── create-story-map.md
+    │   ├── load-stories-to-tracker.md
+    │   └── reconcile-and-update-spec.md
     │
-    ├── story-maps/                    # Visual journey maps
-    │   ├── README.md
-    │   ├── BOARD-NAMING-CONVENTION.md
-    │   ├── STORY-MAP-STRUCTURE.md
-    │   ├── MIRO-CONVENTIONS.md
-    │   └── YYYY-MM-DD-cycle-name/
-    │       ├── story-map.md
-    │       └── miro-metadata.json
+    ├── rules/                         # LLM prompting rules
+    │   └── README.md
     │
-    └── prompts/                       # Reusable AI prompts
-        ├── synthesize-discovery.md
-        ├── extract-user-stories.md
-        └── create-story-map.md
+    └── artifacts/                     # Generated outputs
+        └── timing-log.jsonl
 ```
 
 ---
@@ -119,22 +140,21 @@ claudepm/
 
 **Time**: 5-40 minutes (depending on depth level chosen)
 
-**When to use**: First-time setup, or when starting a new product/module
-
 ---
 
-### 1. `/cycle` - Start Discovery Cycle
+### 1. `/iter` - Start Iteration
 
 ```
-/cycle
+/iter
 ```
 
 **What it does**:
-- Creates dated cycle directory
+- Creates iteration directory structure
 - Optionally conducts stakeholder interview
 - Initializes README and tracking
+- Records timing metrics
 
-**Output**: `product/discovery/YYYY-MM-DD-cycle-name/`
+**Output**: `product/iterations/YYYY-MM-name/`
 
 **Time**: 15-30 minutes (with interview)
 
@@ -150,9 +170,9 @@ claudepm/
 - AI analyzes all discovery materials
 - Identifies 4-6 themes
 - Proposes 8-12 features
-- Cross-references previous cycles
+- Cross-references previous iterations
 
-**Output**: `product/discovery/YYYY-MM-DD-cycle-name/synthesis-YYYY-MM-DD.md`
+**Output**: `product/iterations/{iteration}/discovery/synthesis/synthesis-{date}.md`
 
 **Time**: 2-3 minutes
 
@@ -165,14 +185,12 @@ claudepm/
 ```
 
 **What it does**:
-- Converts synthesis into epic + stories
+- Converts synthesis into user stories
 - Generates Given-When-Then acceptance criteria
 - Includes non-functional requirements
-- Updates stories-by-cycle index
+- Sequential numbering across all iterations
 
-**Output**:
-- `product/requirements/YYYY-MM-DD-cycle-name/epic-###.md`
-- `product/requirements/YYYY-MM-DD-cycle-name/story-###-*.md`
+**Output**: `product/iterations/{iteration}/stories/story-###-*.md`
 
 **Time**: 3-5 minutes
 
@@ -187,31 +205,70 @@ claudepm/
 **What it does**:
 - Creates visual user journey in Miro
 - Organizes stories by activities
-- Separates Now/Next/Later phases
+- Creates NOW/NEXT/LATER swim lanes
 - Enables team collaboration
 
 **Output**:
 - Miro board with story map
-- `product/story-maps/YYYY-MM-DD-cycle-name/story-map.md`
+- `product/iterations/{iteration}/story-maps/miro-metadata.json`
 
 **Time**: 2-3 minutes
 
 ---
 
-### 5. `/jira` - Load to Backlog (Optional)
+### 5. `/demap` - Sync Priorities (Optional)
+
+```
+/demap
+```
+
+**What it does**:
+- Reads current Miro board state
+- Updates story priorities based on swim lane positions
+- Handles new stories added to Miro
+- Archives stories removed from Miro
+
+**Output**: Updated story files with latest priorities
+
+**Time**: 1-2 minutes
+
+---
+
+### 6. `/jira` - Load to Backlog (Optional)
 
 ```
 /jira
 ```
 
 **What it does**:
-- Creates epic in Jira
-- Creates all stories with parent links
+- Creates stories in Jira
 - Includes full acceptance criteria
+- Uses labels to group iteration stories
 
-**Output**: Jira tickets (e.g., SCRUM-40 through SCRUM-55)
+**Output**: Jira tickets (e.g., PROJ-40 through PROJ-55)
 
 **Time**: 1-2 minutes
+
+---
+
+### 7. `/recon` - Reconcile Release (Optional)
+
+```
+/recon
+```
+
+**What it does**:
+- Parses release notes for story IDs
+- Updates story statuses: Ready → Built
+- Creates release artifact
+- Updates Product Specification
+
+**Output**:
+- Updated story files
+- Release artifact in `iterations/{iteration}/releases/`
+- Updated `product-spec.md`
+
+**Time**: 2-3 minutes
 
 ---
 
@@ -219,7 +276,7 @@ claudepm/
 
 **Day 1 - Morning**:
 ```
-9:00am  - /cycle → Interview stakeholder (15 min)
+9:00am  - /iter → Interview stakeholder (15 min)
 9:30am  - Add technical observations (30 min)
 10:00am - /synth → AI creates synthesis (2 min)
 10:15am - Review synthesis with team (15 min)
@@ -227,13 +284,47 @@ claudepm/
 
 **Day 1 - Afternoon**:
 ```
-1:00pm - /req → AI extracts epic + stories (3 min)
+1:00pm - /req → AI extracts stories (3 min)
 2:00pm - /map → Create visual story map (2 min)
 2:15pm - Team grooming session in Miro (1 hour)
+3:15pm - /demap → Sync priorities from Miro (1 min)
 3:30pm - /jira → Load to backlog (1 min)
 ```
 
+**After Release**:
+```
+/recon → Update statuses, create release artifact, update product spec
+```
+
 **Total**: ~3 hours from idea to ready backlog
+
+---
+
+## Key Concepts
+
+### Iterations vs Sprints
+
+**Iterations are NOT time-boxed sprints**. They are:
+- **Arbitrary length** - Could be days, weeks, or months
+- **Initiative-focused** - Bound to a feature area or business goal
+- **Concurrent** - Multiple iterations can be active simultaneously
+- **Context containers** - Keep LLM context manageable by limiting scope
+
+### Story Lifecycle
+
+```
+Draft → Ready → Built
+         ↓
+      Backlog (if not built in iteration)
+         ↓
+      Archived (if removed from scope)
+```
+
+### Story Numbering
+
+Stories are numbered sequentially across ALL iterations (never reset):
+- STORY-001, STORY-002, ... STORY-044
+- New iteration continues from highest number
 
 ---
 
@@ -243,7 +334,7 @@ claudepm/
 - Pattern recognition across interviews
 - Consistent formatting at scale
 - Evidence-based recommendations
-- Cross-cycle learning
+- Cross-iteration learning
 
 ### Complete Acceptance Criteria
 - Given-When-Then scenarios
@@ -254,42 +345,20 @@ claudepm/
 
 ### Visual Story Mapping
 - User journey visualization
-- Now/Next/Later planning
+- NOW/NEXT/LATER planning
 - Team collaboration in Miro
-- Gap identification
+- Bidirectional sync with `/map` and `/demap`
 
 ### Full Traceability
 - Interview → Synthesis → Story → Jira
 - Git version control
-- Stories-by-cycle index
-- Change history
+- Release reconciliation
+- Product specification updates
 
----
-
-## Best Practices
-
-### Context Management
-- Keep `product/context/` files updated
-- Update as product evolves
-- AI uses these for every synthesis
-
-### Discovery Cycles
-- One focus per cycle (don't try to explore everything)
-- 5-10 interviews recommended per cycle
-- Include technical observations
-- Run quarterly meta-synthesis
-
-### Story Quality
-- Review synthesis before extracting stories
-- Run team grooming before Jira load
-- Update stories as understanding evolves
-- Document changes in story history
-
-### Story Mapping
-- Use when journeys are complex
-- Enable personas only when needed
-- Collaborate in Miro workshops
-- Sync back to markdown before Jira load
+### Timing Metrics
+- Per-iteration timing in `timing.json`
+- Global timing log in `artifacts/timing-log.jsonl`
+- Track workflow efficiency over time
 
 ---
 
@@ -302,7 +371,6 @@ claudepm/
 ### Optional (Recommended)
 - **Atlassian MCP** - For Jira integration
   - Direct story creation
-  - Epic linking
   - No copy-paste errors
 
 - **Miro MCP** - For story mapping
@@ -318,10 +386,10 @@ claudepm/
 A: Yes! Stories are created as markdown files. You can manually create Jira tickets or use any other tracker.
 
 **Q: Can I use this without Miro?**
-A: Yes! Story mapping is optional. You can skip `/map` and go straight from `/req` to `/jira`.
+A: Yes! Story mapping is optional. You can skip `/map` and `/demap` and go straight from `/req` to `/jira`.
 
 **Q: How do I customize the workflow?**
-A: Edit files in `product/prompts/` to change AI behavior, or edit slash commands in `commands/` (then copy to `.claude/commands/`).
+A: Edit files in `product/prompts/` to change AI behavior, or edit slash commands in `.claude/commands/`.
 
 **Q: Can I use this for non-software products?**
 A: Yes! Adjust templates and context files for your domain.
@@ -329,53 +397,45 @@ A: Yes! Adjust templates and context files for your domain.
 **Q: What if I have multiple products?**
 A: Create separate directories or use branches in git.
 
+**Q: What's the difference between `/map` and `/demap`?**
+A: `/map` creates the Miro board from stories (markdown → Miro). `/demap` syncs changes back (Miro → markdown).
+
 ---
 
 ## Customization
 
 ### Templates
 Edit these to match your team's format:
-- `product/discovery/interview-template.md`
-- `product/discovery/synthesis-template.md`
-- `product/requirements/story-template.md`
-- `product/requirements/epic-template.md`
+- `product/templates/story-template-llm-dev.md` - For LLM-centric development
+- `product/templates/story-template-human-dev.md` - For human-centric development
+- `product/templates/interview-template.md`
+- `product/templates/synthesis-template.md`
 
 ### Prompts
 Modify AI behavior:
 - `product/prompts/synthesize-discovery.md`
 - `product/prompts/extract-user-stories.md`
 - `product/prompts/create-story-map.md`
+- `product/prompts/reconcile-and-update-spec.md`
 
 ### Slash Commands
-Modify commands in `commands/` (then copy to `.claude/commands/`):
+Modify commands in `.claude/commands/`:
 - Create new workflows
 - Add custom validations
 - Integrate with other tools
-- Keep `commands/` as your source of truth
-
----
-
-## Examples
-
-See the `examples/` directory for:
-- Complete discovery cycle (Authentication)
-- Synthesis document
-- Epic and stories
-- Story map
-- Jira tickets
 
 ---
 
 ## Troubleshooting
 
 ### Slash commands not working
-**Solution**: Make sure you copied the commands from `claudepm/commands/` to `.claude/commands/` at your repository root.
+**Solution**: Make sure you copied the commands to `.claude/commands/` at your repository root.
 
 ### AI synthesis is too generic
 **Solution**: Fill in `product/context/` files with more specific product details.
 
 ### Stories missing acceptance criteria
-**Solution**: Review `product/requirements/story-template.md` to ensure format is correct.
+**Solution**: Review the story templates in `product/templates/` to ensure format is correct.
 
 ### Miro board creation fails
 **Solution**: Boards must be manually created in Miro web UI. Claude cannot create boards via API.
@@ -402,4 +462,4 @@ Built with:
 
 **Ready to transform your product discovery?**
 
-Open the `claudepm` directory in Claude Code and tell Claude: "Help me set up my first discovery cycle"
+Open your project directory in Claude Code and run `/iter` to start your first iteration!

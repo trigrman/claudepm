@@ -1,8 +1,8 @@
 ---
-description: Run synthesis on the current discovery cycle
+description: Run synthesis on the current iteration
 ---
 
-You are being asked to synthesize the discovery materials for the current or specified product discovery cycle.
+You are being asked to synthesize the discovery materials for the current or specified product iteration.
 
 # Overview
 
@@ -14,10 +14,10 @@ This command orchestrates the synthesis workflow by reading the canonical prompt
 - Capture the current timestamp as the operation start time
 - This will be used for timing metrics
 
-## 2. Identify the Cycle
-- Check if the user specified a cycle name (e.g., "2025-10-30-dark-mode")
-- If not specified, look in `product/discovery/` for the most recent cycle (by date prefix)
-- Ask the user to clarify if there are multiple recent cycles
+## 2. Identify the Iteration
+- Check if the user specified an iteration name (e.g., "2025-11-12-mvp")
+- If not specified, look in `product/iterations/` for the most recent iteration (by date prefix)
+- Ask the user to clarify if there are multiple recent iterations
 
 ## 3. Read the Synthesis Prompt
 **Read and follow the instructions in**: `product/prompts/synthesize-discovery.md`
@@ -34,21 +34,21 @@ This prompt contains the canonical instructions for:
 Follow the instructions from the prompt to create the synthesis document.
 
 **Key requirements:**
-- Use the synthesis template from `product/discovery/synthesis-template.md`
-- Review all discovery materials in the cycle directory
+- Use the synthesis template from `product/templates/synthesis-template.md`
+- Review all discovery materials in the iteration's discovery directory
 - Include product context from `product/context/`
-- Cross-reference with previous cycles
+- Cross-reference with previous synthesis from this or other iterations
 - Provide evidence-based recommendations
 
 ## 5. Save Output
-- Save to: `product/discovery/{cycle-name}/synthesis-{date}.md`
+- Save to: `product/iterations/{iteration-name}/discovery/synthesis/synthesis-{date}.md`
 - Use ISO date format (YYYY-MM-DD) for the filename
-- Remove the `.synthesis-pending` marker file if it exists
+- Remove the `.synthesis-pending` marker file from discovery directory if it exists
 
 ## 6. Record Timing and Report Results
 - Capture the end timestamp
 - Calculate duration in seconds
-- Read or create `timing.json` in the cycle directory
+- Read or create `timing.json` in the iteration directory
 - Add this operation to the operations array:
   ```json
   {
@@ -60,9 +60,9 @@ Follow the instructions from the prompt to create the synthesis document.
   }
   ```
 - Update total_duration_seconds
-- Append to global timing log at `artifacts/timing-log.jsonl`:
+- Append to global timing log at `product/artifacts/timing-log.jsonl`:
   ```json
-  {"timestamp": "{end_timestamp}", "command": "/synth", "cycle": "{cycle-name}", "duration_seconds": {duration}, "status": "success"}
+  {"timestamp": "{end_timestamp}", "command": "/synth", "iteration": "{iteration-name}", "duration_seconds": {duration}, "status": "success"}
   ```
 - Tell the user:
   - The synthesis is complete

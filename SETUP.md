@@ -28,18 +28,18 @@ Before starting, ensure you have:
 ```bash
 # If you're starting from GitHub:
 cd ~/dev
-git clone https://github.com/YOUR-ORG/claudepm.git
-cd claudepm
+git clone https://github.com/YOUR-ORG/claudepm.git my-product
+cd my-product
 
 # OR if you downloaded as ZIP:
-cd ~/dev/claudepm
+cd ~/dev/my-product
 ```
 
 ---
 
 ## Step 2: Fill In Product Context
 
-The `product/context/` directory contains templates that Claude uses to understand your product. Fill these in before your first discovery cycle.
+The `product/context/` directory contains templates that Claude uses to understand your product. Fill these in before your first iteration.
 
 ### 2.1 Product Overview (`product/context/product-overview.md`)
 
@@ -172,7 +172,7 @@ task breakdown and intelligent scheduling.
 ## Step 3: Start Claude Code
 
 ```bash
-cd ~/dev/claudepm
+cd ~/dev/my-product
 claude-code
 ```
 
@@ -184,23 +184,23 @@ Please read the SETUP.md file and help me verify my context files are complete.
 Claude will:
 - Review your context files
 - Suggest improvements or missing information
-- Confirm you're ready for your first discovery cycle
+- Confirm you're ready for your first iteration
 
 ---
 
-## Step 4: Run Your First Discovery Cycle
+## Step 4: Run Your First Iteration
 
 ### Option A: With Stakeholder Interview
 
 ```
-/cycle
+/iter
 ```
 
 Claude will:
-1. Create a dated directory (e.g., `product/discovery/2025-11-05-onboarding-redesign/`)
-2. Conduct a structured interview with stakeholder
+1. Create an iteration directory (e.g., `product/iterations/2025-11-mvp/`)
+2. Optionally conduct a structured interview with stakeholder
 3. Document interview notes
-4. Create README and tracking files
+4. Set up tracking files
 
 **Time**: 15-30 minutes
 
@@ -209,7 +209,7 @@ Claude will:
 ### Option B: Add Research Manually
 
 ```
-/cycle
+/iter
 ```
 
 Then decline the interview and add your own research:
@@ -219,7 +219,7 @@ Then decline the interview and add your own research:
 - Support ticket analysis
 - Competitive research
 
-Add files to: `product/discovery/YYYY-MM-DD-cycle-name/`
+Add files to: `product/iterations/[ITERATION]/discovery/`
 
 **Time**: 30-60 minutes (depending on research)
 
@@ -234,13 +234,13 @@ After collecting discovery materials:
 ```
 
 Claude will:
-- Analyze all materials in the current cycle
+- Analyze all materials in the current iteration
 - Identify 4-6 themes
 - Propose 8-12 features
-- Cross-reference previous cycles
+- Cross-reference previous iterations
 - Generate synthesis document
 
-**Output**: `product/discovery/YYYY-MM-DD-cycle-name/synthesis-YYYY-MM-DD.md`
+**Output**: `product/iterations/[ITERATION]/discovery/synthesis/synthesis-YYYY-MM-DD.md`
 
 **Time**: 2-3 minutes
 
@@ -255,14 +255,14 @@ After reviewing synthesis:
 ```
 
 Claude will:
-- Convert synthesis into epic + stories
+- Convert synthesis into user stories
 - Generate Given-When-Then acceptance criteria
 - Include non-functional requirements
-- Update stories-by-cycle index
+- Create stories index
 
 **Output**:
-- `product/requirements/YYYY-MM-DD-cycle-name/epic-###.md`
-- `product/requirements/YYYY-MM-DD-cycle-name/story-###-*.md`
+- `product/iterations/[ITERATION]/stories/story-###-*.md`
+- `product/iterations/[ITERATION]/stories/stories-index.md`
 
 **Time**: 3-5 minutes
 
@@ -278,7 +278,7 @@ If you want to visualize the user journey:
 
 1. Go to https://miro.com
 2. Create new board
-3. Name it: `Story Map - YYYY-MM-DD - [Cycle Name]`
+3. Name it: `Story Map - [Iteration Name]`
 4. Copy the board ID from URL
 
 ### 7.2 Generate Story Map
@@ -295,13 +295,31 @@ Claude will:
 
 **Output**:
 - Miro board with story map
-- `product/story-maps/YYYY-MM-DD-cycle-name/story-map.md`
+- `product/iterations/[ITERATION]/story-maps/story-map.md`
 
 **Time**: 2-3 minutes
 
 ---
 
-## Step 8: Load to Jira (Optional)
+## Step 8: Sync Priorities from Miro (Optional)
+
+After team grooming in Miro:
+
+```
+/demap
+```
+
+Claude will:
+- Read priorities from Miro board
+- Update story markdown files with new priorities
+- Handle new stories added in Miro
+- Flag stories removed from map
+
+**Time**: 1-2 minutes
+
+---
+
+## Step 9: Load to Jira (Optional)
 
 If you have Atlassian MCP configured:
 
@@ -310,9 +328,9 @@ If you have Atlassian MCP configured:
 ```
 
 Claude will:
-- Create epic in Jira
-- Create all stories with parent links
+- Create stories in Jira
 - Include full acceptance criteria
+- Apply appropriate labels
 
 **Output**: Jira tickets (e.g., PROJ-100 through PROJ-115)
 
@@ -320,11 +338,28 @@ Claude will:
 
 ---
 
-## Complete First Cycle Timeline
+## Step 10: Reconcile Releases (Optional)
+
+After development is complete:
+
+```
+/recon
+```
+
+Claude will:
+- Process release notes
+- Update story statuses to "Built"
+- Update product specification
+
+**Time**: 2-3 minutes
+
+---
+
+## Complete First Iteration Timeline
 
 **Minimal path** (no Miro, no Jira):
 ```
-15-30 min - /cycle (with interview)
+15-30 min - /iter (with interview)
 2-3 min  - /synth
 3-5 min  - /req
 Total: ~25-40 minutes to development-ready stories
@@ -332,11 +367,12 @@ Total: ~25-40 minutes to development-ready stories
 
 **Full path** (with Miro and Jira):
 ```
-15-30 min - /cycle
+15-30 min - /iter
 2-3 min  - /synth
+3-5 min  - /req
 2-3 min  - /map (create visual story map)
 15-60 min - Team grooming session in Miro
-3-5 min  - /req (after refining in Miro)
+1-2 min  - /demap (sync priorities back)
 1-2 min  - /jira
 Total: ~40-105 minutes to stories in backlog
 ```
@@ -347,11 +383,11 @@ Total: ~40-105 minutes to stories in backlog
 
 ### Slash commands not working
 
-**Symptom**: `/cycle` returns "command not found"
+**Symptom**: `/iter` returns "command not found"
 
 **Solution**:
 - Commands are in `.claude/commands/`
-- Ensure Claude Code is running in the `~/dev/claudepm` directory
+- Ensure Claude Code is running in your project directory
 - Check that `.claude/commands/*.md` files exist
 
 ---
@@ -372,7 +408,7 @@ Total: ~40-105 minutes to stories in backlog
 **Symptom**: Stories have vague requirements
 
 **Solution**:
-- Review `product/requirements/story-template.md`
+- Review story templates in `product/templates/`
 - Ensure synthesis has enough detail
 - Add technical notes to discovery materials
 
@@ -403,7 +439,7 @@ Total: ~40-105 minutes to stories in backlog
 
 ## Next Steps
 
-After completing your first cycle:
+After completing your first iteration:
 
 1. **Review the output**
    - Read synthesis document
@@ -420,7 +456,7 @@ After completing your first cycle:
    - Begin sprint planning
    - Track progress
 
-4. **Plan next cycle**
+4. **Plan next iteration**
    - What to explore next?
    - Which user problems remain?
    - What technical decisions need research?
@@ -434,9 +470,9 @@ After completing your first cycle:
 - Claude references these for every synthesis
 - More detail = better synthesis
 
-### One Focus Per Cycle
+### One Focus Per Iteration
 - Don't try to explore everything at once
-- 5-10 interviews per cycle is ideal
+- 5-10 interviews per iteration is ideal
 - Deep beats broad
 
 ### Include Technical Observations
@@ -445,7 +481,7 @@ After completing your first cycle:
 - Document constraints discovered
 
 ### Regular Meta-Synthesis
-- Run quarterly meta-synthesis across all cycles
+- Run periodic meta-synthesis across all iterations
 - Identify long-term patterns
 - Update product strategy
 
@@ -456,11 +492,34 @@ After completing your first cycle:
 
 ---
 
+## Key Concepts
+
+### Iterations (Not Sprints)
+- **Arbitrary length** - Could be days, weeks, or months
+- **Initiative-focused** - Bound to a feature area or business goal
+- **Concurrent** - Multiple iterations can be active simultaneously
+- **Context containers** - Keep LLM context manageable by limiting scope
+
+### Story Lifecycle
+```
+Draft → Ready → Built
+         ↓
+      Backlog (if not built in iteration)
+         ↓
+      Archived (if removed from scope)
+```
+
+### Story Numbering
+- Stories are numbered sequentially across ALL iterations (never reset)
+- STORY-001, STORY-002, ... STORY-044 → next iteration continues at STORY-045
+
+---
+
 ## Example Workflow
 
 **Monday Morning:**
 ```
-9:00am  - /cycle → Interview product manager (15 min)
+9:00am  - /iter → Interview product manager (15 min)
 9:30am  - Add engineering notes from tech spike (30 min)
 10:00am - /synth → AI creates synthesis (2 min)
 10:15am - Review synthesis with team (15 min)
@@ -468,9 +527,10 @@ After completing your first cycle:
 
 **Monday Afternoon:**
 ```
-1:00pm - /req → AI extracts epic + stories (3 min)
+1:00pm - /req → AI extracts stories (3 min)
 2:00pm - /map → Create visual story map (2 min)
 2:15pm - Team grooming in Miro (1 hour)
+3:15pm - /demap → Sync priorities back (1 min)
 3:30pm - /jira → Load to backlog (1 min)
 ```
 
@@ -483,16 +543,15 @@ After completing your first cycle:
 ## Getting Help
 
 **Documentation**:
+- `README.md` - Main project documentation
 - `product/README.md` - Detailed workflow guide
-- `product/story-maps/README.md` - Story mapping guide
-- `BOARD-NAMING-CONVENTION.md` - Miro board naming
-- `MIRO-CONVENTIONS.md` - Story map conventions
+- `CLAUDE.md` - AI context and architecture
 
 **Ask Claude**:
 ```
 How do I customize the synthesis prompt?
-What's the difference between /cycle and /synth?
-Can you show me an example epic file?
+What's the difference between /iter and /synth?
+Can you show me an example story file?
 ```
 
 **Community**:
@@ -504,13 +563,13 @@ Can you show me an example epic file?
 ## Ready to Start?
 
 ```bash
-cd ~/dev/claudepm
+cd ~/dev/my-product
 claude-code
 ```
 
 Then:
 ```
-Let's start my first discovery cycle on [your topic]
+Let's start my first iteration on [your topic]
 ```
 
 Claude will guide you through the rest!

@@ -11,7 +11,7 @@ You will create a visual story map on a Miro board that organizes user stories b
 
 ## Input Files
 
-You will read the following files from `product/requirements/{cycle-name}/`:
+You will read the following files from `product/iterations/[ITERATION]/stories/`:
 
 1. **Epic file**: `epic-{number}-{slug}.md`
    - Contains epic title, description, and high-level goals
@@ -61,8 +61,8 @@ From STORIES-SUMMARY.md or story metadata:
 ### Create the Board
 ```
 Use mcp__miro__create-board:
-- name: "Story Map - {cycle-date} - {epic-title}"
-- description: "Story map for {cycle-name}"
+- name: "Story Map - [ITERATION]"
+- description: "Story map for [ITERATION]"
 - sharingPolicy: "edit" (team can collaborate)
 ```
 
@@ -113,7 +113,7 @@ Use mcp__miro__create-board:
 ### 3.1 Epic Header (Text Item)
 ```
 mcp__miro__create-text-item:
-  data: { content: "Story Map - {Epic Title} - {cycle-name}" }
+  data: { content: "Story Map - {Epic Title} - [ITERATION]" }
   position: { x: -575, y: -900 }
   style: { color: "#000000", fontSize: 48, textAlign: "left" }
   geometry: { width: 1600 }
@@ -239,14 +239,14 @@ mcp__miro__create-text-item:
 ## Step 4: Save Metadata
 
 ### 4.1 Create miro-metadata.json
-Save comprehensive metadata to `product/story-maps/{cycle-name}/miro-metadata.json`:
+Save comprehensive metadata to `product/iterations/[ITERATION]/story-maps/miro-metadata.json`:
 
 ```json
 {
   "board_id": "{board_id}",
   "board_name": "{board_name}",
   "board_url": "https://miro.com/app/board/{board_id}",
-  "cycle": "{cycle-name}",
+  "iteration": "[ITERATION]",
   "epic": "{epic_number}",
   "created_at": "{ISO8601_timestamp}",
   "last_synced_at": "{ISO8601_timestamp}",
@@ -334,15 +334,15 @@ Save comprehensive metadata to `product/story-maps/{cycle-name}/miro-metadata.js
 ```
 
 ### 4.2 Create story-map.md Documentation
-Create human-readable documentation at `product/story-maps/{cycle-name}/story-map.md`:
+Create human-readable documentation at `product/iterations/[ITERATION]/story-maps/story-map.md`:
 
 ```markdown
 # Story Map: {Epic Title}
 
 **Epic**: {EPIC-###} - {Epic Title}
-**Miro Board**: [Story Map - {cycle-date} - {Epic Title}](https://miro.com/app/board/{board_id})
+**Miro Board**: [Story Map - [ITERATION]](https://miro.com/app/board/{board_id})
 **Board ID**: {board_id}
-**Cycle**: {cycle-name}
+**Iteration**: [ITERATION]
 **Created**: {YYYY-MM-DD}
 **Last Synced**: {ISO8601_timestamp}
 
@@ -478,10 +478,8 @@ The story map uses persona emojis to indicate which user each story primarily se
 
 ## References
 
-- **Discovery Synthesis**: [synthesis-{date}.md](../../discovery/{cycle-name}/synthesis-{date}.md)
-- **Epic**: [epic-{number}-{slug}.md](../../requirements/{cycle-name}/epic-{number}-{slug}.md)
-- **Stories Summary**: [STORIES-SUMMARY.md](../../requirements/{cycle-name}/STORIES-SUMMARY.md)
-- **Stories Index**: [stories-by-cycle.md](../../requirements/stories-by-cycle.md)
+- **Discovery Synthesis**: [synthesis-{date}.md](../discovery/synthesis/synthesis-{date}.md)
+- **Stories Index**: [stories-index.md](../stories/stories-index.md)
 ```
 
 ## Error Handling
@@ -513,7 +511,7 @@ After completing the story map, tell the user:
 
 📊 **Miro Board**: [View Story Map](https://miro.com/app/board/{board_id})
 
-📝 **Documentation**: `product/story-maps/{cycle-name}/story-map.md`
+📝 **Documentation**: `product/iterations/[ITERATION]/story-maps/story-map.md`
 
 **Summary:**
 - {count} stories mapped across {N} activities

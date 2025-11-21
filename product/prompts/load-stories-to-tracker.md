@@ -4,8 +4,8 @@ Use this prompt to load user stories from markdown files into your issue tracker
 
 ## Prerequisites
 
-1. Stories have been generated using `extract-user-stories.md`
-2. Story files are in `product/requirements/[CYCLE-NAME]/`
+1. Stories have been generated using `/req` command
+2. Story files are in `product/iterations/[ITERATION]/stories/`
 3. MCP server for your issue tracker is configured (e.g., Atlassian MCP for Jira)
 
 ## Required Input
@@ -17,8 +17,7 @@ Use this prompt to load user stories from markdown files into your issue tracker
 
 ## Context Files to Review
 
-- The specific story files you want to load
-- `product/requirements/user-stories/stories-by-cycle.md` (for context)
+- The specific story files you want to load from `product/iterations/[ITERATION]/stories/`
 - `product/context/target-users.md` (if you need to map personas to assignees)
 
 ## Instructions
@@ -41,7 +40,7 @@ For each story file specified:
    So that [benefit].
 
    ## Source
-   Discovery Cycle: [cycle name]
+   Iteration: [iteration name]
    User Need: [JTBD]
 
    ## Acceptance Criteria

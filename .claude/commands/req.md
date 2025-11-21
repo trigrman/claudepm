@@ -1,8 +1,8 @@
 ---
-description: Extract user stories and requirements from discovery synthesis
+description: Extract user stories from iteration synthesis
 ---
 
-You are being asked to extract user stories and requirements from a completed discovery cycle synthesis.
+You are being asked to extract user stories from a completed iteration synthesis.
 
 # Overview
 
@@ -14,53 +14,70 @@ This command orchestrates the requirements extraction workflow by reading the ca
 - Capture the current timestamp as the operation start time
 - This will be used for timing metrics
 
-## 2. Identify the Cycle
-- Check if the user specified a cycle name (e.g., "2025-10-30-dark-mode")
-- If not specified, look in `product/discovery/` for the most recent cycle (by date prefix)
-- Ask the user to clarify if there are multiple recent cycles
+## 2. Identify the Iteration
+- Check if the user specified an iteration name (e.g., "2025-11-12-mvp")
+- If not specified, look in `product/iterations/` for the most recent iteration (by date prefix)
+- Ask the user to clarify if there are multiple recent iterations
 
-## 3. Verify Synthesis Exists
-- Check that `product/discovery/{cycle-name}/synthesis-{date}.md` exists
+## 3. Verify Synthesis Exists and Identify Most Recent
+- Check that `product/iterations/{iteration-name}/discovery/synthesis/` directory exists
+- If multiple synthesis files exist, identify the MOST RECENT by date
+- Use ONLY the most recent synthesis file (older files are historical record only)
 - If no synthesis found, inform the user they need to run `/synth` first
-- Read the synthesis document to understand the features and requirements
+- Read the most recent synthesis document to understand the capabilities and requirements
 
 ## 4. Determine Story Numbering
-- Read `product/requirements/stories-by-cycle.md` to find the highest existing story number
-- New stories should start at the next sequential number (e.g., if last is STORY-021, start at STORY-022)
+- Scan all `product/iterations/*/stories/` directories to find the highest existing story number
+- New stories should start at the next sequential number (e.g., if last is STORY-044, start at STORY-045)
 
-## 5. Read the Story Extraction Prompts
+## 5. Review Design Artifacts
+- Check if `product/iterations/{iteration-name}/design/` directory exists
+- If it exists, review all screenshots and design files
+- Design screens often represent individual stories
+- Screenshots should be referenced in story files
+
+## 6. Read the Story Extraction Prompts
 **Read and follow the instructions in**:
-- `product/prompts/extract-user-stories.md` - For extracting stories from synthesis
-- `product/prompts/generate-acceptance-criteria.md` - For writing acceptance criteria
+- `product/prompts/extract-user-stories.md` - For extracting stories from synthesis and design
 
-These prompts contain the canonical instructions for:
-- How to convert synthesis findings into user stories
-- How to structure epics
+This prompt contains the canonical instructions for:
+- How to convert synthesis capabilities into user stories
+- How to incorporate design screens as stories
 - How to write Given-When-Then acceptance criteria
+- How to use general personas (not specific stakeholder names)
+- How to focus on business requirements while including obvious technical needs
 - How to assign priorities and estimates
 - How to identify dependencies
 - What quality checks to include
+- Story format and size based on development approach (LLM vs human)
 
-## 6. Execute Story Extraction
-Follow the instructions from the prompts to create the requirements documents.
+## 7. Execute Story Extraction
+Follow the instructions from the prompts to create the stories.
 
 **Key requirements:**
-- Use the epic template from `product/requirements/epic-template.md`
-- Use the story template from `product/requirements/story-template.md`
+- Use appropriate story template based on development approach:
+  - `product/templates/story-template-llm-dev.md` for LLM-centric development
+  - `product/templates/story-template-human-dev.md` for human-centric development
 - Include product context from `product/context/`
-- Ensure sequential story numbering
+- Review BOTH synthesis capabilities AND design screens for story creation
+- Reference screenshots in stories where design artifacts exist
+- Use general personas appropriate to your product (not specific stakeholder names)
+- Focus on business requirements with obvious technical needs included
+- Ensure sequential story numbering across all iterations
 - Follow Given-When-Then format for acceptance criteria
 
-## 7. Save Requirements Output
-- Create directory `product/requirements/{cycle-name}/` if it doesn't exist
-- Save epic as `product/requirements/{cycle-name}/epic-{number}-{slug}.md`
-- Save each story as `product/requirements/{cycle-name}/story-{number}-{slug}.md`
-- Update `product/requirements/stories-by-cycle.md` with the new cycle section
+## 8. Save Stories
+- Stories are saved to `product/iterations/{iteration-name}/stories/`
+- Save each story as `story-{number}-{slug}.md`
+- Create or update `product/iterations/{iteration-name}/stories/stories-index.md` with:
+  - List of all stories in this iteration
+  - Summary of priorities
+  - Total effort estimate
 
-## 8. Record Timing and Report Results
+## 9. Record Timing and Report Results
 - Capture the end timestamp
 - Calculate duration in seconds
-- Read or create `timing.json` in the cycle directory
+- Read or create `timing.json` in the iteration directory
 - Add this operation to the operations array:
   ```json
   {
@@ -70,28 +87,31 @@ Follow the instructions from the prompts to create the requirements documents.
     "duration_seconds": {duration},
     "status": "success",
     "metadata": {
-      "epic_created": "EPIC-XXX",
-      "stories_created": {count}
+      "stories_created": {count},
+      "story_ids": ["STORY-XXX", "STORY-YYY"]
     }
   }
   ```
 - Update total_duration_seconds
-- Append to global timing log at `artifacts/timing-log.jsonl`:
+- Append to global timing log at `product/artifacts/timing-log.jsonl`:
   ```json
-  {"timestamp": "{end_timestamp}", "command": "/req", "cycle": "{cycle-name}", "duration_seconds": {duration}, "status": "success", "metadata": {"epic_created": "EPIC-XXX", "stories_created": {count}}}
+  {"timestamp": "{end_timestamp}", "command": "/req", "iteration": "{iteration-name}", "duration_seconds": {duration}, "status": "success", "metadata": {"stories_created": {count}}}
   ```
 - Tell the user:
   - Story extraction is complete
-  - List the epic and all stories created with their titles and priorities
+  - List all stories created with their IDs, titles, and priorities
   - Summary: X stories (Y must have, Z should have, etc.)
   - Estimated total effort
   - The operation duration
-  - Note that stories are ready to be loaded to Jira with `/jira`
+  - Next steps: Stories can be mapped with `/map`, loaded to Jira with `/jira`, or sent directly to development
 
 # Important Notes
 
-- **The prompt files are the source of truth** for extraction and acceptance criteria logic
-- Users can customize story extraction by editing the prompt files in `product/prompts/`
+- **The prompt file is the source of truth** for extraction logic
+- Users can customize story extraction by editing `product/prompts/extract-user-stories.md`
 - This command handles workflow orchestration (finding files, numbering, timing, saving output)
-- The prompts handle the actual extraction logic and requirements
+- The prompt handles the actual extraction logic and story format
+- Epics have been removed - stories are the atomic units
+- Stories stay in their iteration directory (not moved to backlog until after build)
 - DO NOT automatically load stories to Jira - that's a separate workflow (`/jira`)
+- Story numbering is sequential across all iterations, not per-iteration
