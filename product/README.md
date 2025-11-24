@@ -40,13 +40,13 @@ This system supports **multiple concurrent iterations** with full traceability:
 - **Context containers** - Keep LLM context manageable by limiting scope
 
 ### Directory Purpose
-- **iterations/**: All artifacts for each iteration (discovery, stories, designs, releases)
+- **iterations/**: All artifacts for each iteration (discovery, stories, designs)
 - **context/**: Core product knowledge that informs all AI-generated work
 - **prompts/**: Reusable Claude Code prompts for workflows
 - **templates/**: Templates for stories, synthesis, interviews, etc.
 - **rules/**: LLM prompting rules aligned with engineering team patterns
 - **backlog.md**: Cross-iteration backlog of Ready stories not yet built
-- **product-spec.md**: Current product capabilities (updated via `/recon`)
+- **product-spec.md**: Current product capabilities (updated via `/rel`)
 - **artifacts/**: AI-generated outputs and timing logs
 
 ---
@@ -73,12 +73,13 @@ product/
 │   │   │   └── story-map.md
 │   │   ├── design/                    # Design artifacts
 │   │   │   └── screenshots/
-│   │   ├── releases/                  # Release artifacts (via /recon)
-│   │   │   └── release-001-*.md
 │   │   └── timing.json                # Performance metrics
 │   │
 │   └── 2025-12-analytics/             # Another iteration
 │       └── ...
+│
+├── releases/                          # Release artifacts (cross-iteration, via /rel)
+│   └── release-001-*.md
 │
 ├── backlog.md                         # Ready stories not yet built
 ├── product-spec.md                    # Current product capabilities
@@ -103,7 +104,7 @@ product/
 │   ├── extract-user-stories.md        # Generate stories + acceptance criteria
 │   ├── create-story-map.md            # Create Miro visualization
 │   ├── load-stories-to-tracker.md     # Import stories to Jira via MCP
-│   ├── reconcile-and-update-spec.md   # Process releases, update spec
+│   ├── release-and-update-spec.md     # Process releases, update spec
 │   └── generate-acceptance-criteria.md
 │
 ├── rules/                             # LLM prompting rules
@@ -187,7 +188,7 @@ claude-code
 - `/map` - Create Miro story map from stories
 - `/demap` - Sync Miro story map priorities back to stories
 - `/jira` - Load stories to Jira backlog
-- `/recon` - Reconcile release notes and update Product Specification
+- `/rel` - Reconcile release notes and update Product Specification
 
 **Or use natural language commands like:**
 ```
@@ -342,14 +343,14 @@ See [Interactive Mode Quick Reference](#interactive-mode-quick-reference) below 
 
 **Interactive Mode:**
 ```
-/recon
+/rel
 ```
 
 **What it does**:
 - Parses release notes for story IDs
 - Updates story statuses: Ready → Built
 - Identifies unbuilt Ready stories (asks about moving to backlog)
-- Creates release artifact in iteration/releases/
+- Creates release artifact in `product/releases/`
 - Updates Product Specification with newly built capabilities
 - Updates backlog.md if stories moved
 
@@ -380,7 +381,7 @@ claude-code
 | Create story map | `/map` | `Create story map for iteration: [NAME]` |
 | Sync Miro priorities | `/demap` | `Sync Miro priorities for iteration: [NAME]` |
 | Load to Jira | `/jira` | `Load stories for iteration: [NAME] to Jira` |
-| Reconcile release | `/recon` | `Reconcile release notes for iteration: [NAME]` |
+| Reconcile release | `/rel` | `Reconcile release notes for iteration: [NAME]` |
 
 ### Story Lifecycle
 
@@ -512,7 +513,7 @@ Then provide:
 
 **Using slash command:**
 ```
-/recon
+/rel
 ```
 (Parses release notes, updates story statuses, updates Product Spec)
 
@@ -564,7 +565,7 @@ What's the next available story ID?
 
 - Update context files when product direction changes
 - Run `/demap` after Miro collaboration sessions
-- Run `/recon` after each production release
+- Run `/rel` after each production release
 - Create meta-synthesis when patterns emerge across iterations
 - Archive old iterations (>6 months) to `iterations/archive/`
 
@@ -590,7 +591,7 @@ What's the next available story ID?
 7. ✅ Run `/demap` after Miro collaboration
 8. ✅ Run `/jira` to load to backlog
 9. ✅ Build and release
-10. ✅ Run `/recon` to reconcile and update Product Spec
+10. ✅ Run `/rel` to reconcile and update Product Spec
 
 ---
 

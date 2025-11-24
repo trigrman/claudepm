@@ -65,7 +65,7 @@ claudepm/
 │   ├── map.md                         # Create Miro story map
 │   ├── demap.md                       # Sync Miro priorities back
 │   ├── jira.md                        # Load to Jira
-│   └── recon.md                       # Reconcile releases
+│   └── rel.md                         # Create release and update spec
 │
 └── product/
     ├── README.md                      # Product workflow guide
@@ -85,9 +85,10 @@ claudepm/
     │       │   └── story-map.md
     │       ├── design/
     │       │   └── screenshots/
-    │       ├── releases/
-    │       │   └── release-001-*.md
     │       └── timing.json
+    │
+    ├── releases/                      # Release artifacts (cross-iteration)
+    │   └── release-001-*.md
     │
     ├── backlog.md                     # Ready stories not yet built
     ├── product-spec.md                # Current product capabilities
@@ -112,7 +113,7 @@ claudepm/
     │   ├── extract-user-stories.md
     │   ├── create-story-map.md
     │   ├── load-stories-to-tracker.md
-    │   └── reconcile-and-update-spec.md
+    │   └── release-and-update-spec.md
     │
     ├── rules/                         # LLM prompting rules
     │   └── README.md
@@ -251,21 +252,22 @@ claudepm/
 
 ---
 
-### 7. `/recon` - Reconcile Release (Optional)
+### 7. `/rel` - Create Release (Optional)
 
 ```
-/recon
+/rel
 ```
 
 **What it does**:
-- Parses release notes for story IDs
+- Analyzes git history to determine what was built
+- Confirms completed stories with PM
 - Updates story statuses: Ready → Built
 - Creates release artifact
 - Updates Product Specification
 
 **Output**:
 - Updated story files
-- Release artifact in `iterations/{iteration}/releases/`
+- Release artifact in `product/releases/`
 - Updated `product-spec.md`
 
 **Time**: 2-3 minutes
@@ -293,7 +295,7 @@ claudepm/
 
 **After Release**:
 ```
-/recon → Update statuses, create release artifact, update product spec
+/rel → Update statuses, create release artifact, update product spec
 ```
 
 **Total**: ~3 hours from idea to ready backlog
@@ -416,7 +418,7 @@ Modify AI behavior:
 - `product/prompts/synthesize-discovery.md`
 - `product/prompts/extract-user-stories.md`
 - `product/prompts/create-story-map.md`
-- `product/prompts/reconcile-and-update-spec.md`
+- `product/prompts/release-and-update-spec.md`
 
 ### Slash Commands
 Modify commands in `.claude/commands/`:

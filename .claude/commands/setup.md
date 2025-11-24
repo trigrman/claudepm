@@ -186,7 +186,7 @@ After completing the interview (regardless of option chosen), say:
 > - `/map` - Create Miro story map
 > - `/demap` - Sync priorities from Miro back to stories
 > - `/jira` - Load stories to Jira (if Atlassian MCP configured)
-> - `/recon` - Reconcile releases and update product spec
+> - `/rel` - Create release and update product spec
 >
 > **Ready to start your first iteration?** Just type `/iter` when you're ready!"
 

@@ -343,7 +343,7 @@ Claude will:
 After development is complete:
 
 ```
-/recon
+/rel
 ```
 
 Claude will:
